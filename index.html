@@ -20,8 +20,8 @@
       const { useState, useEffect } = React;
 
       const UserThingForm = ({ things, users, createUserThing }) => {
-        const [thingId, setThingId] = useState("");
-        const [userId, setUserId] = useState("");
+        const [thingId, setThingId] = useState('');
+        const [userId, setUserId] = useState('');
         const onSubmit = ev => {
           ev.preventDefault();
           createUserThing({ thingId, userId });
@@ -63,7 +63,7 @@
       };
 
       const UserForm = ({ createUser }) => {
-        const [name, setName] = useState("");
+        const [name, setName] = useState('');
         const onSubmit = ev => {
           ev.preventDefault();
           createUser({ name });
@@ -80,7 +80,7 @@
       };
 
       const ThingForm = ({ createThing }) => {
-        const [name, setName] = useState("");
+        const [name, setName] = useState('');
         const onSubmit = ev => {
           ev.preventDefault();
           createThing({ name });
@@ -100,7 +100,7 @@
         users,
         userThings,
         destroyUserThing,
-        destroyThing
+        destroyThing,
       }) => {
         return (
           <section>
@@ -138,12 +138,17 @@
           </section>
         );
       };
+
+      const updateFavorite = userThing => {
+        const checkbox = document.getElementById('favorite');
+      };
+
       const Users = ({
         users,
         things,
         userThings,
         destroyUserThing,
-        destroyUser
+        destroyUser,
       }) => {
         return (
           <section>
@@ -170,6 +175,12 @@
                               >
                                 x
                               </button>
+                              <input
+                                type="checkbox"
+                                id="favorite"
+                                onChange={updateFavorite(userThing)}
+                              ></input>
+                              Favorite?
                             </li>
                           );
                         })}
@@ -183,25 +194,25 @@
       };
 
       const App = () => {
-        const [error, setError] = useState("");
+        const [error, setError] = useState('');
         const [users, setUsers] = useState([]);
         const [things, setThings] = useState([]);
         const [userThings, setUserThings] = useState([]);
         const createUserThing = async userThing => {
           try {
-            const created = (await axios.post("/api/user_things", userThing))
+            const created = (await axios.post('/api/user_things', userThing))
               .data;
             setUserThings([...userThings, created]);
-            setError("");
+            setError('');
           } catch (ex) {
             setError(ex.response.data.message);
           }
         };
         const createThing = async thing => {
           try {
-            const created = (await axios.post("/api/things", thing)).data;
+            const created = (await axios.post('/api/things', thing)).data;
             setThings([...things, created]);
-            setError("");
+            setError('');
           } catch (ex) {
             setError(ex.response.data.message);
           }
@@ -213,13 +224,13 @@
               userThing => userThing.id !== userThingToDestroy.id
             )
           );
-          setError("");
+          setError('');
         };
         const createUser = async user => {
           try {
-            const created = (await axios.post("/api/users", user)).data;
+            const created = (await axios.post('/api/users', user)).data;
             setUsers([...users, created]);
-            setError("");
+            setError('');
           } catch (ex) {
             setError(ex.response.data.message);
           }
@@ -228,7 +239,7 @@
           try {
             await axios.delete(`/api/users/${userToDestroy.id}`);
             setUsers(users.filter(user => user.id !== userToDestroy.id));
-            setError("");
+            setError('');
           } catch (ex) {
             setError(ex.response.data.message);
           }
@@ -237,23 +248,23 @@
           try {
             await axios.delete(`/api/things/${thingToDestroy.id}`);
             setThings(things.filter(thing => thing.id !== thingToDestroy.id));
-            setError("");
+            setError('');
           } catch (ex) {
             setError(ex.response.data.message);
           }
         };
         useEffect(() => {
           Promise.all([
-            axios.get("/api/users"),
-            axios.get("/api/things"),
-            axios.get("/api/user_things")
+            axios.get('/api/users'),
+            axios.get('/api/things'),
+            axios.get('/api/user_things'),
           ])
             .then(responses => responses.map(response => response.data))
             .then(results => {
               setUsers(results[0]);
               setThings(results[1]);
               setUserThings(results[2]);
-              setError("");
+              setError('');
             })
             .catch(ex => setError(ex.response.data.message));
         }, []);
@@ -289,7 +300,7 @@
           </div>
         );
       };
-      const root = document.querySelector("#root");
+      const root = document.querySelector('#root');
       ReactDOM.render(<App />, root);
     </script>
   </body>

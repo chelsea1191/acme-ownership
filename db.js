@@ -1,6 +1,6 @@
-const pg = require("pg");
+const pg = require('pg');
 const client = new pg.Client(
-  process.env.DATABASE_URL || "postgres://localhost/user_things"
+  process.env.DATABASE_URL || 'postgres://localhost/user_things'
 );
 
 client.connect();
@@ -26,19 +26,20 @@ const sync = async () => {
   CREATE TABLE user_things (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     "thingId" UUID REFERENCES things(id),
-    "userId" UUID REFERENCES users(id)
+    "userId" UUID REFERENCES users(id),
+    "isFavorite" BOOLEAN DEFAULT FALSE
   );
   CREATE UNIQUE INDEX ON user_things("thingId", "userId");
 `;
   await client.query(SQL);
-  await createUser({ name: "Rachel" });
-  await createUser({ name: "Ross" });
-  await createUser({ name: "Joey" });
-  await createUser({ name: "Chandler" });
-  await createThing({ name: "purse" });
-  await createThing({ name: "dinosaur" });
-  await createThing({ name: "joke" });
-  await createThing({ name: "sandwich" });
+  await createUser({ name: 'Rachel' });
+  await createUser({ name: 'Ross' });
+  await createUser({ name: 'Joey' });
+  await createUser({ name: 'Chandler' });
+  await createThing({ name: 'purse' });
+  await createThing({ name: 'dinosaur' });
+  await createThing({ name: 'joke' });
+  await createThing({ name: 'sandwich' });
 };
 
 const readUsers = async () => {
@@ -99,5 +100,5 @@ module.exports = {
   createUserThing,
   deleteUser,
   deleteThing,
-  deleteUserThing
+  deleteUserThing,
 };

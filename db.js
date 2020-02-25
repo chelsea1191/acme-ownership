@@ -25,11 +25,10 @@ const sync = async () => {
   );
   CREATE TABLE user_things (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    thingid UUID REFERENCES things(id),
-    userid UUID REFERENCES users(id)
+    "thingId" UUID REFERENCES things(id),
+    "userId" UUID REFERENCES users(id)
   );
-
-  CREATE UNIQUE INDEX ON user_things(thingid, userid);
+  CREATE UNIQUE INDEX ON user_things("thingId", "userId");
 `;
   await client.query(SQL);
   await createUser({ name: "Rachel" });
@@ -68,6 +67,14 @@ const createThing = async ({ name }) => {
   const response = await client.query(SQL, [name]);
   return response.rows[0];
 };
+const createUserThing = async ({ userId, thingId }) => {
+  return (
+    await client.query(
+      `INSERT INTO user_things ("userId", "thingId") VALUES ($1, $2) returning *`,
+      [userId, thingId]
+    )
+  ).rows[0];
+};
 
 const deleteUser = async id => {
   const SQL = `DELETE FROM users WHERE (id) = ($1);`;
@@ -89,6 +96,7 @@ module.exports = {
   readUserThings,
   createUser,
   createThing,
+  createUserThing,
   deleteUser,
   deleteThing,
   deleteUserThing

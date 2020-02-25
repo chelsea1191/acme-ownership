@@ -48,6 +48,11 @@ app.post("/api/things", (req, res, next) => {
     .then(thing => res.send(thing))
     .catch(next);
 });
+app.post("/api/user_things", (req, res, next) => {
+  db.createUserThing(req.body)
+    .then(userThing => res.send(userThing))
+    .catch(next);
+});
 
 ///////////////////////////////DELETE///////////////////////////
 app.delete("/api/users/:id", (req, res, next) => {
@@ -61,7 +66,7 @@ app.delete("/api/things/:id", (req, res, next) => {
     .catch(next);
 });
 app.delete("/api/user_things/:id", (req, res, next) => {
-  db.deleteUserThings(req.params.id)
+  db.deleteUserThing(req.params.id)
     .then(() => res.sendStatus(204)) //since no return
     .catch(next);
 });

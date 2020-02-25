@@ -1,6 +1,6 @@
-const pg = require('pg');
+const pg = require("pg");
 const client = new pg.Client(
-  process.env.DATABASE_URL || 'postgres://localhost/user_things'
+  process.env.DATABASE_URL || "postgres://localhost/user_things"
 );
 
 client.connect();
@@ -32,14 +32,14 @@ const sync = async () => {
   CREATE UNIQUE INDEX ON user_things("thingId", "userId");
 `;
   await client.query(SQL);
-  await createUser({ name: 'Rachel' });
-  await createUser({ name: 'Ross' });
-  await createUser({ name: 'Joey' });
-  await createUser({ name: 'Chandler' });
-  await createThing({ name: 'purse' });
-  await createThing({ name: 'dinosaur' });
-  await createThing({ name: 'joke' });
-  await createThing({ name: 'sandwich' });
+  await createUser({ name: "Rachel" });
+  await createUser({ name: "Ross" });
+  await createUser({ name: "Joey" });
+  await createUser({ name: "Chandler" });
+  await createThing({ name: "purse" });
+  await createThing({ name: "dinosaur" });
+  await createThing({ name: "joke" });
+  await createThing({ name: "sandwich" });
 };
 
 const readUsers = async () => {
@@ -77,6 +77,12 @@ const createUserThing = async ({ userId, thingId }) => {
   ).rows[0];
 };
 
+const updateUserThing = async ({ isFavorite, id }) => {
+  const SQL = `UPDATE user_things SET (isFavorite) = ($1) WHERE (id) = ($2) returning *`;
+  const response = await client.query(SQL, [isFavorite, id]);
+  return response.rows[0];
+};
+
 const deleteUser = async id => {
   const SQL = `DELETE FROM users WHERE (id) = ($1);`;
   await client.query(SQL, [id]);
@@ -101,4 +107,5 @@ module.exports = {
   deleteUser,
   deleteThing,
   deleteUserThing,
+  updateUserThing
 };
